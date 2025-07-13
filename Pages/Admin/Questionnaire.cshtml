@@ -1,0 +1,228 @@
+﻿@page
+@model QuestionnaireModel
+@{
+    ViewData["Title"] = "Questionnaire Configuration";
+    Layout = "_AdminLayout";
+}
+
+<div class="container mt-4">
+    <h2>@ViewData["Title"]</h2>
+    <hr />
+
+    <!-- Success/Error Messages -->
+    @if (TempData["SuccessMessage"] != null)
+    {
+        <div class="alert alert-success">@TempData["SuccessMessage"]</div>
+    }
+    @if (TempData["ErrorMessage"] != null)
+    {
+        <div class="alert alert-danger">@TempData["ErrorMessage"]</div>
+    }
+
+    <div class="row">
+        <!-- Questionnaire List -->
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-header">
+                    <h5>Questionnaires</h5>
+                </div>
+                <div class="card-body">
+                    <a asp-page="./Questionnaire" class="btn btn-primary mb-3">Create New</a>
+                    <div class="list-group">
+                        @foreach (var questionnaire in Model.ExistingQuestionnaires)
+                        {
+                            <div class="list-group-item list-group-item-action flex-column align-items-start">
+                                <div class="d-flex w-100 justify-content-between">
+                                    <h6 class="mb-1">@questionnaire.Title</h6>
+                                    <small class="text-muted">@questionnaire.Questions.Count questions</small>
+                                </div>
+                                <p class="mb-1 small">@questionnaire.Description</p>
+                                <div class="btn-group btn-group-sm mt-2">
+                                    <a asp-page="./Questionnaire" asp-route-id="@questionnaire.Id" class="btn btn-outline-primary">Edit</a>
+                                    <form method="post" asp-page-handler="Delete" asp-route-id="@questionnaire.Id" onsubmit="return confirm('Are you sure?')">
+                                        <button type="submit" class="btn btn-outline-danger">Delete</button>
+                                    </form>
+                                    <form method="post" asp-page-handler="ToggleActive" asp-route-id="@questionnaire.Id">
+                                        <button type="submit" class="btn @(questionnaire.IsActive ? "btn-success" : "btn-outline-secondary")">
+                                            @(questionnaire.IsActive ? "Active" : "Inactive")
+                                        </button>
+                                    </form>
+                                </div>
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Questionnaire Editor -->
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header">
+                    <h5>@(string.IsNullOrEmpty(Model.CurrentQuestionnaire.Id) ? "Create New" : "Edit") Questionnaire</h5>
+                </div>
+                <div class="card-body">
+                    <form method="post">
+                        <input type="hidden" asp-for="CurrentQuestionnaire.Id" />
+                        
+                        <!-- Basic Info -->
+                        <div class="form-group">
+                            <label asp-for="CurrentQuestionnaire.Title"></label>
+                            <input asp-for="CurrentQuestionnaire.Title" class="form-control" />
+                            <span asp-validation-for="CurrentQuestionnaire.Title" class="text-danger"></span>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label asp-for="CurrentQuestionnaire.Description"></label>
+                            <textarea asp-for="CurrentQuestionnaire.Description" class="form-control" rows="3"></textarea>
+                        </div>
+                        
+                        <div class="form-group form-check">
+                            <input type="checkbox" asp-for="CurrentQuestionnaire.IsActive" class="form-check-input" />
+                            <label asp-for="CurrentQuestionnaire.IsActive" class="form-check-label"></label>
+                        </div>
+
+                        <!-- Questions Section -->
+                        <div class="mt-4">
+                            <h5>Questions</h5>
+                            <hr />
+                            
+                            <!-- Existing Questions -->
+                            @for (int i = 0; i < Model.CurrentQuestionnaire.Questions.Count; i++)
+                            {
+                                <div class="card mb-3">
+                                    <div class="card-header d-flex justify-content-between align-items-center">
+                                        <span>Question #@(i + 1)</span>
+                                        <button type="submit" asp-page-handler="RemoveQuestion" asp-route-index="@i" 
+                                                class="btn btn-sm btn-outline-danger" onclick="return confirm('Remove this question?')">
+                                            Remove
+                                        </button>
+                                    </div>
+                                    <div class="card-body">
+                                        <input type="hidden" asp-for="CurrentQuestionnaire.Questions[i].Order" />
+                                        <input type="hidden" asp-for="CurrentQuestionnaire.Questions[i].Text" />
+                                        <input type="hidden" asp-for="CurrentQuestionnaire.Questions[i].Type" />
+                                        <input type="hidden" asp-for="CurrentQuestionnaire.Questions[i].IsRequired" />
+                                        
+                                        <div class="form-group">
+                                            <label>Question Text</label>
+                                            <input asp-for="CurrentQuestionnaire.Questions[i].Text" class="form-control" readonly />
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <div class="form-group">
+                                                    <label>Type</label>
+                                                    <input value="@Model.CurrentQuestionnaire.Questions[i].Type" class="form-control" readonly />
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div class="form-group">
+                                                    <label>Required</label>
+                                                    <input value="@(Model.CurrentQuestionnaire.Questions[i].IsRequired ? "Yes" : "No")" class="form-control" readonly />
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            }
+
+                            <!-- Add New Question -->
+                            <div class="card mt-4">
+                                <div class="card-header">
+                                    <h6>Add New Question</h6>
+                                </div>
+                                <div class="card-body">
+                                    <div class="form-group">
+                                        <label asp-for="NewQuestion.Text"></label>
+                                        <input asp-for="NewQuestion.Text" class="form-control" />
+                                        <span asp-validation-for="NewQuestion.Text" class="text-danger"></span>
+                                    </div>
+                                    
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label asp-for="NewQuestion.Type"></label>
+                                                <select asp-for="NewQuestion.Type" class="form-control">
+                                                    <option value="Text">Text</option>
+                                                    <option value="Radio">Radio Buttons</option>
+                                                    <option value="Checkbox">Checkboxes</option>
+                                                    <option value="Dropdown">Dropdown</option>
+                                                    <option value="Rating">Rating</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label asp-for="NewQuestion.Order"></label>
+                                                <input asp-for="NewQuestion.Order" type="number" class="form-control" />
+                                                <small class="text-muted">Leave 0 for auto-order</small>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="form-group form-check">
+                                        <input type="checkbox" asp-for="NewQuestion.IsRequired" class="form-check-input" />
+                                        <label asp-for="NewQuestion.IsRequired" class="form-check-label"></label>
+                                    </div>
+                                    
+                                    <div id="optionsContainer" style="@(Model.NewQuestion.Type != QuestionType.Text ? "" : "display:none")">
+                                        <div class="form-group">
+                                            <label>Options (one per line)</label>
+                                            <textarea id="optionsTextarea" class="form-control" rows="3"></textarea>
+                                        </div>
+                                    </div>
+                                    
+                                    <button type="submit" asp-page-handler="AddQuestion" class="btn btn-primary mt-2">Add Question</button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Save Button -->
+                        <div class="form-group mt-4">
+                            <button type="submit" asp-page-handler="Save" class="btn btn-success">Save Questionnaire</button>
+                            <a asp-page="./Questionnaire" class="btn btn-secondary">Cancel</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    
+    <script>
+        // Show/hide options based on question type
+        $(document).ready(function() {
+            // Initial setup
+            toggleOptions($('#NewQuestion_Type').val());
+            
+            // Handle type change
+            $('#NewQuestion_Type').change(function() {
+                toggleOptions($(this).val());
+            });
+            
+            function toggleOptions(type) {
+                if (type === 'Text') {
+                    $('#optionsContainer').hide();
+                } else {
+                    $('#optionsContainer').show();
+                }
+            }
+            
+            // Convert textarea options to array before submission
+            $('form').submit(function() {
+                var optionsText = $('#optionsTextarea').val();
+                if (optionsText) {
+                    var optionsArray = optionsText.split('\n')
+                        .map(item => item.trim())
+                        .filter(item => item.length > 0);
+                    
+                    // This will be handled by a hidden field in a real implementation
+                    console.log(optionsArray);
+                }
+            });
+        });
+    </script>
+}

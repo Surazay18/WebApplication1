@@ -1,0 +1,68 @@
+﻿@page
+@model WebApplication1.Pages.Members.IndexModel
+@{
+    ViewData["Title"] = "Members";
+}
+
+<div class="container mt-4">
+    @if (Model.ShowSuccessMessage)
+    {
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            Member created successfully!
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
+
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2>@ViewData["Title"]</h2>
+        <a asp-page="Create" class="btn btn-primary">Add New Member</a>
+    </div>
+
+    <div class="table-responsive">
+        <table class="table table-striped table-hover">
+            <thead class="table-dark">
+                <tr>
+                    <th>Name</th>
+                    <th>Email</th>
+                    <th>Phone</th>
+                    <th>Membership</th>
+                    <th>Join Date</th>
+                    <th>DOB</th>
+                    <th>Status</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (Model.Members != null)
+                {
+                    @foreach (var member in Model.Members)
+                    {
+                        <tr>
+                            <td>@member.FirstName @member.LastName</td>
+                            <td>@member.Email</td>
+                            <td>@member.PhoneNumber</td>
+                            <td>@member.MembershipType</td>
+                            <td>@member.JoinDate.ToShortDateString()</td>
+                            <td>@member.DateOfBirth.ToShortDateString()</td>
+                            <td>
+                                <span class="badge @(member.IsActive ? "bg-success" : "bg-secondary")">
+                                    @(member.IsActive ? "Active" : "Inactive")
+                                </span>
+                            </td>
+                            <td>
+                                <a asp-page="./Details" asp-route-id="@member.Id" class="btn btn-sm btn-info">View</a>
+                            </td>
+                        </tr>
+                    }
+                }
+                else
+                {
+                    <tr>
+                        <td colspan="7" class="text-center">No members found</td>
+                    </tr>
+                }
+            <
+            </tbody>
+        </table>
+    </div>
+</div>

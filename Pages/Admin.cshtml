@@ -1,0 +1,89 @@
+﻿@* @page *@
+@* @model AdminModel *@
+@* @{ *@
+@*     ViewData["Title"] = "Admin Panel"; *@
+@* } *@
+
+@* <h1>User Management</h1> *@
+
+@* <table class="table"> *@
+@*     <thead> *@
+@*         <tr> *@
+@*             <th>Username</th> *@
+@*             <th>Role</th> *@
+@*             <th>Actions</th> *@
+@*         </tr> *@
+@*     </thead> *@
+@*     <tbody> *@
+@*         @foreach (var user in Model.Users) *@
+@*         { *@
+@*             <tr> *@
+@*                 <td>@user.Username</td> *@
+@*                 <td>@user.Role</td> *@
+@*                 <td> *@
+                    @* @if (user.Role == "User") *@ 
+@*                     { *@
+@*                         <form method="post" asp-page-handler="Promote"> *@
+@*                             <input type="hidden" name="userId" value="@user.Id" /> *@
+@*                             <button type="submit" class="btn btn-success">Promote to Admin</button> *@
+@*                         </form> *@
+@*                     } *@
+@*                     else *@
+@*                     { *@
+@*                         <form method="post" asp-page-handler="Demote"> *@
+@*                             <input type="hidden" name="userId" value="@user.Id" /> *@
+@*                             <button type="submit" class="btn btn-warning">Demote to User</button> *@
+@*                         </form> *@
+@*                     } *@
+@*                 </td>
+@*             </tr> *@
+@*         } *@
+@*     </tbody> *@
+@* </table> *@
+@* Pages/Admin/Index.cshtml  *@
+
+@page
+@model AdminModel
+@using Microsoft.AspNetCore.Authorization
+@{
+    ViewData["Title"] = "Admin Dashboard";
+    Layout = "_AdminLayout";
+}
+
+<h2>Admin Dashboard</h2>
+<p>Welcome to the admin panel!</p>
+
+<div class="container mt-5">
+    <h2 class="mb-4">Welcome, @User.Identity?.Name!</h2>
+
+    <div class="row">
+        <div class="col-md-4">
+            <div class="card text-white bg-primary mb-3">
+                <div class="card-body">
+                    <h5 class="card-title">Users</h5>
+                    <p class="card-text">Total Registered Users: @Model.TotalUsers</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card text-white bg-success mb-3">
+                <div class="card-body">
+                    <h5 class="card-title">Sales</h5>
+                    <p class="card-text">$5,200 this month</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card text-white bg-warning mb-3">
+                <div class="card-body">
+                    <h5 class="card-title">Alerts</h5>
+                    <p class="card-text">3 New Alerts</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <form method="get" asp-page="/Logout">
+        <button type="submit" class="btn btn-danger mt-4">Logout</button>
+    </form>
+</div>

@@ -1,0 +1,130 @@
+﻿@page
+@model QuestionnaireModel
+@{
+    ViewData["Title"] = "Questionnaire";
+}
+
+<div class="container">
+    @if (Model.ActiveQuestionnaire == null)
+    {
+        <div class="alert alert-info">
+            There are no active questionnaires at this time.
+        </div>
+    }
+    else if (Model.HasSubmitted)
+    {
+        <div class="alert alert-success">
+            You have already submitted this questionnaire. Thank you for your participation!
+        </div>
+    }
+    else
+    {
+        <div class="card">
+            <div class="card-header">
+                <h2>@Model.ActiveQuestionnaire.Title</h2>
+                <p class="text-muted">@Model.ActiveQuestionnaire.Description</p>
+            </div>
+
+            <div class="card-body">
+                <form method="post">
+                    @for (int i = 0; i < Model.ActiveQuestionnaire.Questions.Count; i++)
+                    {
+                        var question = Model.ActiveQuestionnaire.Questions[i];
+
+                        <div class="mb-4">
+                            <h5>@question.Text @(question.IsRequired ? "<span class='text-danger'>*</span>" : "")</h5>
+
+                            @switch (question.Type)
+                            {
+                                case QuestionType.Text:
+                                    <input type="text"
+                                           name="Responses[@i].Answer"
+                                           class="form-control"
+                                    @(question.IsRequired ? "required" : "") />
+                                    break;
+
+                                case QuestionType.Radio:
+                                    @foreach (var option in question.Options)
+                                    {
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="radio"
+                                                   name="Responses[@i].Answer" value="@option"
+                                                   id="q@(i)_@option" @(question.IsRequired ? "required" : "")>
+                                            <label class="form-check-label" for="q@(i)_@option">
+                                                @option
+                                            </label>
+                                        </div>
+                                    }
+                                    break;
+
+                                case QuestionType.Checkbox:
+                                    @foreach (var option in question.Options)
+                                    {
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox"
+                                                   name="Responses[@i].Answers" value="@option"
+                                                   id="q@(i)_@option">
+                                            <label class="form-check-label" for="q@(i)_@option">
+                                                @option
+                                            </label>
+                                        </div>
+                                    }
+                                    break;
+
+                                case QuestionType.Dropdown:
+                                    <select class="form-select" name="Responses[@i].Answer"
+                                    @(question.IsRequired ? "required" : "")>
+                                        <option value="">-- Select --</option>
+                                        @foreach (var option in question.Options)
+                                        {
+                                            <option value="@option">@option</option>
+                                        }
+                                    </select>
+                                    break;
+
+                                case QuestionType.Rating:
+                                    <div class="rating">
+                                        @for (int j = 1; j <= 5; j++)
+                                        {
+                                            <input type="radio" name="Responses[@i].Answer"
+                                                   value="@j" id="q@(i)_@j"
+                                            @(question.IsRequired ? "required" : "")>
+                                            <label for="q@(i)_@j">☆</label>
+                                        }
+                                    </div>
+                                    break;
+                            }
+
+                            <input type="hidden" name="Responses[@i].QuestionIndex" value="@i" />
+                        </div>
+                    }
+
+                    <button type="submit" class="btn btn-primary">Submit Questionnaire</button>
+                </form>
+            </div>
+        </div>
+    }
+</div>
+
+<style>
+    .rating {
+        display: flex;
+        flex-direction: row-reverse;
+        justify-content: flex-end;
+    }
+
+        .rating > input {
+            display: none;
+        }
+
+        .rating > label {
+            font-size: 2rem;
+            color: #ddd;
+            cursor: pointer;
+        }
+
+        .rating > input:checked ~ label,
+        .rating > input:hover ~ label {
+            color: gold;
+        }
+</style>

@@ -1,0 +1,313 @@
+﻿@page
+@model WebApplication1.Pages.IndexModel
+@{
+    ViewData["Title"] = "Dashboard";
+}
+
+<div class="container-fluid">
+    <!-- Page Heading -->
+    <div class="d-sm-flex align-items-center justify-content-between mb-4">
+        <h1 class="h3 mb-0 text-gray-800">Dashboard</h1>
+        <a href="#" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm">
+            <i class="bi bi-download text-white-50"></i> Generate Report
+        </a>
+    </div>
+
+    <!-- Stats Cards -->
+    <div class="row">
+       
+            <!-- Members Card -->
+            <!-- Members Card -->
+            <div class="col-xl-3 col-md-6 mb-4">
+                <a href="/members" class="card-link" style="text-decoration: none;">
+                    <div class="card stat-card members h-100 py-2">
+                        <div class="card-body">
+                            <div class="row no-gutters align-items-center">
+                                <div class="col mr-2">
+                                    <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
+                                        Total Members
+                                    </div>
+                                    <div class="h5 mb-0 font-weight-bold text-gray-800">
+                                        @Model.TotalMembersCount.ToString("N0")
+                                    </div>
+                                    <div class="mt-2 text-xs">
+                                        <span class="text-success">
+                                            <i class="bi bi-arrow-up"></i> @Model.ActiveMembersCount.ToString("N0") active
+                                        </span> |
+                                        <span class="text-primary">
+                                            +@Model.NewMembersThisMonth.ToString("N0") this month
+                                        </span>
+                                    </div>
+                                </div>
+                                <div class="col-auto">
+                                    <i class="bi bi-people fs-1 text-primary"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </a>
+            </div>
+ 
+
+        <!-- Attendance Card -->
+        <div class="col-xl-3 col-md-6 mb-4">
+            <div class="card stat-card attendance h-100 py-2">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
+                                Today's Attendance
+                            </div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800">84</div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="bi bi-calendar-check fs-1 text-success"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Payments Card -->
+        <div class="col-xl-3 col-md-6 mb-4">
+            <div class="card stat-card payments h-100 py-2">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">
+                                Monthly Revenue
+                            </div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800">$24,560</div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="bi bi-currency-dollar fs-1 text-warning"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Trainers Card -->
+        <div class="col-xl-3 col-md-6 mb-4">
+            <div class="card stat-card trainers h-100 py-2">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold text-danger text-uppercase mb-1">
+                                Active Trainers
+                            </div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800">12</div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="bi bi-person-badge fs-1 text-danger"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Charts Row -->
+    <div class="row">
+        <!-- Attendance Chart -->
+        <div class="col-xl-8 col-lg-7">
+            <div class="card shadow mb-4">
+                <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                    <h6 class="m-0 font-weight-bold text-primary">Monthly Attendance Overview</h6>
+                </div>
+                <div class="card-body">
+                    <div class="chart-area">
+                        <canvas id="attendanceChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Membership Types -->
+        <div class="col-xl-4 col-lg-5">
+            <div class="card shadow mb-4">
+                <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                    <h6 class="m-0 font-weight-bold text-primary">Membership Types</h6>
+                </div>
+                <div class="card-body">
+                    <div class="chart-pie pt-4 pb-2">
+                        <canvas id="membershipChart"></canvas>
+                    </div>
+                    <div class="mt-4 text-center small">
+                        @foreach (var type in Model.MembershipTypeCounts)
+                        {
+                            var colorClass = type.Key switch
+                            {
+                                "Standard" => "text-primary",
+                                "Premium" => "text-success",
+                                "VIP" => "text-info",
+                                _ => "text-secondary"
+                            };
+
+                            <span class="mr-2">
+                                <i class="bi bi-circle-fill @colorClass"></i> @type.Key (@type.Value)
+                            </span>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Recent Activity -->
+    <div class="row">
+        <div class="col-lg-6 mb-4">
+            <div class="card shadow mb-4">
+                <div class="card-header py-3">
+                    <h6 class="m-0 font-weight-bold text-primary">Recent Members</h6>
+                </div>
+                <div class="card-body">
+                    <div class="list-group">
+                        <a href="#" class="list-group-item list-group-item-action">
+                            <div class="d-flex w-100 justify-content-between">
+                                <h6 class="mb-1">John Smith</h6>
+                                <small>Today</small>
+                            </div>
+                            <p class="mb-1">Premium Membership</p>
+                            <small>Joined today</small>
+                        </a>
+                        <a href="#" class="list-group-item list-group-item-action">
+                            <div class="d-flex w-100 justify-content-between">
+                                <h6 class="mb-1">Sarah Johnson</h6>
+                                <small>2 days ago</small>
+                            </div>
+                            <p class="mb-1">Standard Membership</p>
+                            <small>Personal trainer assigned</small>
+                        </a>
+                        <a href="#" class="list-group-item list-group-item-action">
+                            <div class="d-flex w-100 justify-content-between">
+                                <h6 class="mb-1">Michael Brown</h6>
+                                <small>3 days ago</small>
+                            </div>
+                            <p class="mb-1">VIP Membership</p>
+                            <small>Annual subscription</small>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-6 mb-4">
+            <div class="card shadow mb-4">
+                <div class="card-header py-3">
+                    <h6 class="m-0 font-weight-bold text-primary">Recent Payments</h6>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-bordered" width="100%" cellspacing="0">
+                            <thead>
+                                <tr>
+                                    <th>Member</th>
+                                    <th>Amount</th>
+                                    <th>Date</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>John Smith</td>
+                                    <td>$120.00</td>
+                                    <td>2023-06-15</td>
+                                    <td><span class="badge bg-success">Paid</span></td>
+                                </tr>
+                                <tr>
+                                    <td>Emma Wilson</td>
+                                    <td>$80.00</td>
+                                    <td>2023-06-14</td>
+                                    <td><span class="badge bg-success">Paid</span></td>
+                                </tr>
+                                <tr>
+                                    <td>Robert Davis</td>
+                                    <td>$200.00</td>
+                                    <td>2023-06-12</td>
+                                    <td><span class="badge bg-warning">Pending</span></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <script>
+        // Attendance Chart
+        var ctx = document.getElementById('attendanceChart').getContext('2d');
+        var attendanceChart = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
+                datasets: [{
+                    label: 'Attendance',
+                    data: [420, 580, 510, 620, 700, 650],
+                    backgroundColor: 'rgba(78, 115, 223, 0.05)',
+                    borderColor: 'rgba(78, 115, 223, 1)',
+                    borderWidth: 2,
+                    pointRadius: 3,
+                    pointBackgroundColor: 'rgba(78, 115, 223, 1)',
+                    pointBorderColor: 'rgba(78, 115, 223, 1)',
+                    pointHoverRadius: 3,
+                    pointHoverBackgroundColor: 'rgba(78, 115, 223, 1)',
+                    pointHoverBorderColor: 'rgba(78, 115, 223, 1)',
+                    pointHitRadius: 10,
+                    pointBorderWidth: 2,
+                    tension: 0.3
+                }]
+            },
+            options: {
+                maintainAspectRatio: false,
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+
+        // Membership Chart
+        var ctx2 = document.getElementById('membershipChart').getContext('2d');
+        var membershipChart = new Chart(ctx2, {
+            type: 'doughnut',
+            data: {
+                labels: @Json.Serialize(Model.MembershipTypeCounts.Keys),
+                datasets: [{
+                    data: @Json.Serialize(Model.MembershipTypeCounts.Values),
+                    backgroundColor: [
+                        '#4e73df', // Standard - blue
+                        '#1cc88a', // Premium - green
+                        '#36b9cc', // VIP - teal
+                        '#f6c23e', // Other - yellow
+                        '#e74a3b'  // Other - red
+                    ],
+                    hoverBackgroundColor: [
+                        '#2e59d9',
+                        '#17a673',
+                        '#2c9faf',
+                        '#dda20a',
+                        '#be2617'
+                    ],
+                    hoverBorderColor: "rgba(234, 236, 244, 1)",
+                }],
+            },
+            options: {
+                maintainAspectRatio: false,
+                cutout: '70%',
+                plugins: {
+                    legend: {
+                        display: false
+                    }
+                }
+            },
+        });
+    </script>
+}

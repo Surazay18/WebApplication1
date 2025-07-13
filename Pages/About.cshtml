@@ -1,0 +1,20 @@
+﻿@page
+@model AboutModel
+
+<!-- Your existing about page content -->
+@if (Model.ActiveQuestionnaireId != null)
+{
+    <div class="mt-4">
+        <a asp-page="/DisplayQuestionnaire"
+           asp-route-id="@Model.ActiveQuestionnaireId"
+           class="btn btn-success">
+            Take Our Current Questionnaire
+        </a>
+    </div>
+}
+else
+{
+    <div class="alert alert-info mt-4">
+        No active questionnaires at the moment. Check back later!
+    </div>
+}

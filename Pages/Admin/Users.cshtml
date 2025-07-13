@@ -1,0 +1,52 @@
+﻿@page
+@model WebApplication1.Pages.Admin.UsersModel
+@{
+    ViewData["Title"] = "User Management";
+    Layout = "_AdminLayout";
+}
+
+<h2>User Management</h2>
+
+@if (TempData["StatusMessage"] != null)
+{
+    <div class="alert alert-success">@TempData["StatusMessage"]</div>
+}
+@if (TempData["ErrorMessage"] != null)
+{
+    <div class="alert alert-danger">@TempData["ErrorMessage"]</div>
+}
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Username</th>
+            <th>Role</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var user in Model.Users)
+        {
+            <tr>
+                <td>@user.Username</td>
+                <td>@user.Role</td>
+                <td>
+                    @if (user.Role == "User") 
+                    { 
+                         <form method="post" asp-page-handler="Promote"> 
+                             <input type="hidden" name="userId" value="@user.Id" /> 
+                             <button type="submit" class="btn btn-success">Promote to Admin</button> 
+                         </form> 
+                     } 
+                     else 
+                     { 
+                         <form method="post" asp-page-handler="Demote"> 
+                             <input type="hidden" name="userId" value="@user.Id" /> 
+                             <button type="submit" class="btn btn-warning">Demote to User</button> 
+                         </form> 
+                     } 
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

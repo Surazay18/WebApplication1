@@ -1,0 +1,16 @@
+﻿@page
+@model WebApplication1.Pages.InitializeAdminModel
+@{
+    var result = Model.OnGetAsync().Result as ContentResult;
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>Initialize Admin</title>
+</head>
+<body>
+    <h1>@result?.Content</h1>
+</body>
+</html>

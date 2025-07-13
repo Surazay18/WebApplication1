@@ -1,0 +1,129 @@
+﻿@page "/questionnaire/{id}"
+@model DisplayQuestionnaireModel
+@{
+    ViewData["Title"] = Model.Questionnaire.Title;
+}
+
+<div class="container">
+    <h2>@Model.Questionnaire.Title</h2>
+    <p>@Model.Questionnaire.Description</p>
+
+    <form method="post">
+        <input type="hidden" asp-for="QuestionnaireId" />
+
+        @for (int i = 0; i < Model.Questionnaire.Questions.Count; i++)
+        {
+            var question = Model.Questionnaire.Questions[i];
+            <div class="card mb-3">
+                <div class="card-body">
+                    <h5 class="card-title">
+                        @question.Text
+                        @if (question.IsRequired)
+                        {
+                            <span class="text-danger">*</span>
+                        }
+                    </h5>
+
+                    @switch (question.Type)
+                    {
+                        case QuestionType.Text:
+                            <textarea class="form-control"
+                                      asp-for="Answers[i].TextResponse"
+                                      required="@question.IsRequired"></textarea>
+                            <span asp-validation-for="Answers[i].TextResponse" class="text-danger"></span>
+                            break;
+
+                        case QuestionType.Radio:
+                            @foreach (var option in question.Options!)
+                            {
+                                <div class="form-check">
+                                    <input class="form-check-input"
+                                           type="radio"
+                                           asp-for="Answers[i].SingleOptionResponse"
+                                           value="@option"
+                                           required="@question.IsRequired">
+                                    <label class="form-check-label">@option</label>
+                                </div>
+                            }
+                            <span asp-validation-for="Answers[i].SingleOptionResponse" class="text-danger"></span>
+                            break;
+
+                        case QuestionType.Checkbox:
+                            @foreach (var option in question.Options!)
+                            {
+                                <div class="form-check">
+                                    <input class="form-check-input"
+                                           type="checkbox"
+                                           name="Answers[@i].MultipleOptionsResponse"
+                                           value="@option">
+                                    <label class="form-check-label">@option</label>
+                                </div>
+                            }
+                            break;
+
+                        case QuestionType.Dropdown:
+                            <select class="form-select"
+                                    asp-for="Answers[i].SingleOptionResponse"
+                                    required="@question.IsRequired">
+                                <option value="">Select an option</option>
+                                @foreach (var option in question.Options!)
+                                {
+                                    <option value="@option">@option</option>
+                                }
+                            </select>
+                            <span asp-validation-for="Answers[i].SingleOptionResponse" class="text-danger"></span>
+                            break;
+
+                        case QuestionType.Rating:
+                            <div class="rating">
+                                @for (int j = 1; j <= 5; j++)
+                                {
+                                    <input type="radio"
+                                           asp-for="Answers[i].RatingResponse"
+                                           value="@j"
+                                           required="@question.IsRequired"
+                                           id="rating-@i-@j">
+                                    <label for="rating-@i-@j">★</label>
+                                }
+                            </div>
+                            <span asp-validation-for="Answers[i].RatingResponse" class="text-danger"></span>
+                            break;
+                    }
+                </div>
+            </div>
+        }
+
+        <button type="submit" class="btn btn-primary">Submit Answers</button>
+    </form>
+</div>
+
+<style>
+    .rating {
+        display: flex;
+        flex-direction: row-reverse;
+        justify-content: flex-end;
+    }
+
+        .rating input {
+            display: none;
+        }
+
+        .rating label {
+            font-size: 2rem;
+            color: #ddd;
+            cursor: pointer;
+        }
+
+        .rating input:checked ~ label {
+            color: #ffc107;
+        }
+
+        .rating label:hover,
+        .rating label:hover ~ label {
+            color: #ffc107;
+        }
+</style>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

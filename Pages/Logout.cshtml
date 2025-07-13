@@ -1,0 +1,12 @@
+﻿@page
+@model WebApplication1.Pages.LogoutModel
+@{
+    ViewData["Title"] = "Logout";
+}
+
+<h2>@ViewData["Title"]</h2>
+
+<p>You are being logged out. Please wait...</p>
+
+<!-- Optionally, add a small delay for user experience -->
+<meta http-equiv="refresh" content="2;url=@Url.Page("/Login")" />

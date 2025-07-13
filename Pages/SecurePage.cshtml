@@ -1,0 +1,43 @@
+﻿@page
+@model WebApplication1.Pages.SecurePageModel
+@using Microsoft.AspNetCore.Authorization
+@attribute [Authorize]
+
+@{
+    ViewData["Title"] = "Admin Dashboard";
+}
+
+<div class="container mt-5">
+    <h2 class="mb-4">Welcome, @User.Identity?.Name!</h2>
+
+    <div class="row">
+        <div class="col-md-4">
+            <div class="card text-white bg-primary mb-3">
+                <div class="card-body">
+                    <h5 class="card-title">Users</h5>
+                    <p class="card-text">Total Registered Users: @Model.TotalUsers</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card text-white bg-success mb-3">
+                <div class="card-body">
+                    <h5 class="card-title">Sales</h5>
+                    <p class="card-text">$5,200 this month</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card text-white bg-warning mb-3">
+                <div class="card-body">
+                    <h5 class="card-title">Alerts</h5>
+                    <p class="card-text">3 New Alerts</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <form method="get" asp-page="/Logout">
+        <button type="submit" class="btn btn-danger mt-4">Logout</button>
+    </form>
+</div>

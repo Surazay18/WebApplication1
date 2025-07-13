@@ -1,0 +1,131 @@
+﻿@page
+@model WebApplication1.Models.BloodDonationFormModel
+@{
+    ViewData["Title"] = "Blood Donation Entry";
+}
+
+<div class="container mt-5">
+    <h2 class="text-center mb-4">Blood Donation Entry Form</h2>
+
+    <form method="post" asp-action="SubmitDonation" class="needs-validation" novalidate>
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+        <!-- Personal Information -->
+        <fieldset class="mb-4">
+            <legend>Personal Information</legend>
+
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    <label asp-for="FullName" class="form-label">Full Name</label>
+                    <input asp-for="FullName" class="form-control" required />
+                    <span asp-validation-for="FullName" class="text-danger"></span>
+                </div>
+
+                <div class="col-md-6 mb-3">
+                    <label asp-for="DateOfBirth" class="form-label">Date of Birth</label>
+                    <input asp-for="DateOfBirth" type="date" class="form-control" required />
+                    <span asp-validation-for="DateOfBirth" class="text-danger"></span>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    <label asp-for="Gender" class="form-label">Gender</label>
+                    <select asp-for="Gender" class="form-select" required>
+                        <option value="">-- Select --</option>
+                        <option value="Male">Male</option>
+                        <option value="Female">Female</option>
+                        <option value="Other">Other</option>
+                        <option value="PreferNotToSay">Prefer not to say</option>
+                    </select>
+                    <span asp-validation-for="Gender" class="text-danger"></span>
+                </div>
+
+                <div class="col-md-6 mb-3">
+                    <label asp-for="BloodType" class="form-label">Blood Type</label>
+                    <select asp-for="BloodType" class="form-select" required>
+                        <option value="">-- Select --</option>
+                        <option value="A+">A+</option>
+                        <option value="A-">A-</option>
+                        <option value="B+">B+</option>
+                        <option value="B-">B-</option>
+                        <option value="AB+">AB+</option>
+                        <option value="AB-">AB-</option>
+                        <option value="O+">O+</option>
+                        <option value="O-">O-</option>
+                    </select>
+                    <span asp-validation-for="BloodType" class="text-danger"></span>
+                </div>
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="Email" class="form-label">Email</label>
+                <input asp-for="Email" type="email" class="form-control" required />
+                <span asp-validation-for="Email" class="text-danger"></span>
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="PhoneNumber" class="form-label">Phone Number</label>
+                <input asp-for="PhoneNumber" class="form-control" required />
+                <span asp-validation-for="PhoneNumber" class="text-danger"></span>
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="Address" class="form-label">Address</label>
+                <textarea asp-for="Address" class="form-control" rows="2" required></textarea>
+                <span asp-validation-for="Address" class="text-danger"></span>
+            </div>
+        </fieldset>
+
+        <!-- Health Screening -->
+        <fieldset class="mb-4">
+            <legend>Health Screening</legend>
+
+            <div class="mb-3">
+                <label asp-for="LastDonationDate" class="form-label">Last Donation Date (if any)</label>
+                <input asp-for="LastDonationDate" type="date" class="form-control" />
+                <span asp-validation-for="LastDonationDate" class="text-danger"></span>
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">Do you have any of the following?</label>
+                <div class="form-check">
+                    <input asp-for="HasChronicIllness" class="form-check-input" type="checkbox" />
+                    <label asp-for="HasChronicIllness" class="form-check-label">Chronic Illness</label>
+                </div>
+                <div class="form-check">
+                    <input asp-for="HasRecentSurgery" class="form-check-input" type="checkbox" />
+                    <label asp-for="HasRecentSurgery" class="form-check-label">Recent Surgery</label>
+                </div>
+                <div class="form-check">
+                    <input asp-for="HasTraveledRecently" class="form-check-input" type="checkbox" />
+                    <label asp-for="HasTraveledRecently" class="form-check-label">Traveled to High-Risk Areas</label>
+                </div>
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="AdditionalNotes" class="form-label">Additional Notes</label>
+                <textarea asp-for="AdditionalNotes" class="form-control" rows="3"></textarea>
+            </div>
+        </fieldset>
+
+        <!-- Consent -->
+        <div class="mb-4 form-check">
+            <input asp-for="ConsentToDonate" class="form-check-input" required />
+            <label asp-for="ConsentToDonate" class="form-check-label">
+                I confirm that all information provided is accurate and consent to blood donation.
+            </label>
+            <span asp-validation-for="ConsentToDonate" class="text-danger"></span>
+        </div>
+
+        <!-- Submit Button -->
+        <div class="text-center">
+            <button type="submit" class="btn btn-primary btn-lg">Submit Donation</button>
+        </div>
+    </form>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}
+

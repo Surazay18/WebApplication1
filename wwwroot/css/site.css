@@ -1,0 +1,106 @@
+/* General Body and Container Styling */
+body {
+    font-family: 'Arial', sans-serif;
+    background-color: #f8f9fa;
+    color: #212529;
+    margin: 0;
+    padding: 0;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 15px;
+}
+
+/* Header Section */
+header {
+    background: linear-gradient(90deg, #007bff, #0056b3);
+    color: white;
+    padding: 20px 0;
+    text-align: center;
+}
+
+    header h1 {
+        font-size: 2.5rem;
+        margin: 0;
+
+    }
+
+    header p {
+        font-size: 1.25rem;
+        margin-top: 10px;
+    }
+
+/* Card Styles */
+.card {
+    border-radius: 0.5rem;
+    border: none;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+    .card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 4px 15px rgba(0, 0, 5, 0.2);
+        background-color: #f0f8ff; /* Light blue background color on hover */
+        border: 1px solid #007bff; /* Add a blue border on hover */
+    }
+
+.card-title {
+    font-size: 1.25rem;
+    font-weight: bold;
+    margin-top: 15px;
+}
+
+.card-text {
+    font-size: 1rem;
+    margin-bottom: 15px;
+}
+
+/* Quick Stats Icons */
+.card .display-4 {
+    font-size: 3rem;
+}
+
+.card .display-6 {
+    font-size: 2rem;
+    font-weight: bold;
+}
+
+/* Buttons */
+.btn {
+    border-radius: 0.25rem;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+    .btn:hover {
+        transform: scale(1.05);
+    }
+
+/* Footer */
+footer {
+    background-color: #f1f1f1;
+    color: #6c757d;
+    padding: 15px 0;
+    font-size: 0.875rem;
+    text-align: center;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    header h1 {
+        font-size: 2rem;
+    }
+
+    header p {
+        font-size: 1rem;
+    }
+
+    .card .display-4 {
+        font-size: 4.9rem;
+    }
+
+    .card .display-6 {
+        font-size: 1.75rem;
+    }
+}

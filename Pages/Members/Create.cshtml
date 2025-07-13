@@ -1,0 +1,144 @@
+﻿@page
+@model WebApplication1.Pages.Members.CreateModel
+@{
+    ViewData["Title"] = "Add New Member";
+}
+
+<div class="container mt-4">
+    <h2>@ViewData["Title"]</h2>
+    <hr />
+
+    <form method="post" class="needs-validation" novalidate>
+        <div asp-validation-summary="ModelOnly" class="alert alert-danger"></div>
+
+        <div class="row">
+            <div class="col-md-6">
+                <div class="mb-3">
+                    <label asp-for="Member.FirstName" class="form-label"></label>
+                    <input asp-for="Member.FirstName" class="form-control" required />
+                    <span asp-validation-for="Member.FirstName" class="text-danger"></span>
+                </div>
+
+                <div class="mb-3">
+                    <label asp-for="Member.LastName" class="form-label"></label>
+                    <input asp-for="Member.LastName" class="form-control" required />
+                    <span asp-validation-for="Member.LastName" class="text-danger"></span>
+                </div>
+
+                <div class="mb-3">
+                    <label asp-for="Member.Email" class="form-label"></label>
+                    <input asp-for="Member.Email" type="email" class="form-control" required />
+                    <span asp-validation-for="Member.Email" class="text-danger"></span>
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                <div class="mb-3">
+                    <label asp-for="Member.PhoneNumber" class="form-label"></label>
+                    <input asp-for="Member.PhoneNumber" class="form-control" required />
+                    <span asp-validation-for="Member.PhoneNumber" class="text-danger"></span>
+                </div>
+
+                <div class="mb-3">
+                    <label asp-for="Member.DateOfBirth" class="form-label"></label>
+                    <input asp-for="Member.DateOfBirth"
+                           type="text"
+                           class="form-control datepicker"
+                           placeholder="Select date of birth"
+                           data-input required />
+                    <span asp-validation-for="Member.DateOfBirth" class="text-danger"></span>
+                </div>
+
+                <div class="mb-3">
+                    <label asp-for="Member.MembershipType" class="form-label"></label>
+                    <select asp-for="Member.MembershipType" class="form-select" required>
+                        <option value="">Select Membership Type</option>
+                        <option value="Basic">Basic ($29/month)</option>
+                        <option value="Premium">Premium ($49/month)</option>
+                        <option value="VIP">VIP ($99/month)</option>
+                        <option value="Student">Student ($19/month)</option>
+                    </select>
+                    <span asp-validation-for="Member.MembershipType" class="text-danger"></span>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-6">
+                <div class="mb-3">
+                    <label asp-for="Member.JoinDate" class="form-label"></label>
+                    <input asp-for="Member.JoinDate" type="date" class="form-control" required />
+                    <span asp-validation-for="Member.JoinDate" class="text-danger"></span>
+                </div>
+
+                <div class="mb-3">
+                    <label asp-for="Member.Address" class="form-label"></label>
+                    <textarea asp-for="Member.Address" class="form-control" rows="3"></textarea>
+                    <span asp-validation-for="Member.Address" class="text-danger"></span>
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                <div class="mb-3">
+                    <label asp-for="Member.EmergencyContact" class="form-label"></label>
+                    <input asp-for="Member.EmergencyContact" class="form-control" />
+                    <span asp-validation-for="Member.EmergencyContact" class="text-danger"></span>
+                </div>
+
+                <div class="mb-3">
+                    <label asp-for="Member.EmergencyContactPhone" class="form-label"></label>
+                    <input asp-for="Member.EmergencyContactPhone" class="form-control" />
+                    <span asp-validation-for="Member.EmergencyContactPhone" class="text-danger"></span>
+                </div>
+            </div>
+        </div>
+
+        <div class="d-grid gap-2 d-md-flex justify-content-md-end mt-4">
+            <a asp-page="Index" class="btn btn-outline-secondary me-md-2">Cancel</a>
+            <button type="submit" class="btn btn-primary">Create Member</button>
+        </div>
+    </form>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <script>
+        // Client-side validation
+        (function () {
+            'use strict'
+
+            // Fetch all the forms we want to apply custom Bootstrap validation styles to
+            var forms = document.querySelectorAll('.needs-validation')
+
+            // Loop over them and prevent submission
+            Array.prototype.slice.call(forms)
+                .forEach(function (form) {
+                    form.addEventListener('submit', function (event) {
+                        if (!form.checkValidity()) {
+                            event.preventDefault()
+                            event.stopPropagation()
+                        }
+
+                        form.classList.add('was-validated')
+                    }, false)
+                })
+        })()
+    </script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            flatpickr(".datepicker", {
+                dateFormat: "Y-m-d",
+                maxDate: new Date().fp_incr(-365 * 18), // Minimum age 18 years
+                minDate: new Date().fp_incr(-365 * 100), // Maximum age 100 years
+                allowInput: true,
+                clickOpens: true,
+                disableMobile: true, // Better UX on desktop
+                locale: {
+                    firstDayOfWeek: 1 // Monday
+                }
+            });
+        });
+    </script>
+}

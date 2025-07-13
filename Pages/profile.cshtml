@@ -1,0 +1,17 @@
+﻿@page
+@model WebApplication1.Pages.ProfileModel
+@{
+    ViewData["Title"] = "Profile";
+}
+
+<h1>@ViewData["Title"]</h1>
+
+<!-- Profile Card -->
+<div class="card" style="width: 18rem;">
+    <img src="https://d2v5dzhdg4zhx3.cloudfront.net/web-assets/images/storypages/short/linkedin-profile-picture-maker/dummy_image/thumb/004.webp" class="card-img-top rounded-circle" alt="Profile Image" />
+    <div class="card-body">
+        <h5 class="card-title">@Model.Username</h5>
+        <p class="card-text">@Model.Email</p>
+        <a href="/EditProfile" class="btn btn-primary">Edit Profile</a>
+    </div>
+</div>
