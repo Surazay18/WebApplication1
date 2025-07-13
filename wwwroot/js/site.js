@@ -12,6 +12,12 @@ function adjustMenuToggleButton() {
     }
 }
 
+    function toggleSidebar() {
+        const sidebar = document.getElementById('sidebar');
+    sidebar.classList.toggle('collapsed');
+    }
+
+
 // Initial check when page loads
 adjustMenuToggleButton();
 

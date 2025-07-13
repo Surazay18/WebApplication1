@@ -85,6 +85,27 @@ footer {
     font-size: 0.875rem;
     text-align: center;
 }
+.sidebar {
+    transition: width 0.3s ease;
+}
+
+    .sidebar.collapsed {
+        width: 70px !important;
+    }
+
+        .sidebar.collapsed .link-text,
+        .sidebar.collapsed .sidebar-title {
+            display: none;
+        }
+
+.toggle-button {
+    font-size: 1.5rem;
+    margin: 10px 15px;
+    cursor: pointer;
+    position: fixed;
+    z-index: 1100;
+}
+
 
 /* Responsive Design */
 @media (max-width: 768px) {
